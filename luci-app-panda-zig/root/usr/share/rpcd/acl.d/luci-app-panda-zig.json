@@ -1,0 +1,36 @@
+{
+  "luci-app-panda-zig": {
+    "description": "Grant LuCI access to Panda Zig DDNS",
+    "read": {
+      "ubus": {
+        "uci":     [ "get", "state" ],
+        "file":    [ "read" ],
+        "service": [ "list" ],
+        "luci.panda-zig": [ "clearLog" ]
+      },
+      "uci": {
+        "panda-zig": [ "*" ]
+      },
+      "file": {
+        "/var/log/panda-zig.log": [ "read" ],
+        "/etc/config/panda-zig": [ "read" ],
+        "/usr/libexec/rpcd/luci.panda-zig": [ "exec" ]
+      }
+    },
+    "write": {
+      "ubus": {
+        "uci":     [ "set", "apply", "commit", "revert", "add", "delete",
+                     "rename", "order", "changes" ],
+        "file":    [ "write" ],
+        "luci.panda-zig": [ "clearLog" ]
+      },
+      "uci": {
+        "panda-zig": [ "*" ]
+      },
+      "file": {
+        "/var/log/panda-zig.log": [ "write" ],
+        "/usr/libexec/rpcd/luci.panda-zig": [ "exec" ]
+      }
+    }
+  }
+}
