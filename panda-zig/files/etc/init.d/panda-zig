@@ -43,11 +43,6 @@ _start_ddns() {
     logger -t "$NAME" "DDNS (Zig) 已启动（更新间隔：${DDNS_INTERVAL} 秒）"
 }
 
-stop_service() {
-    logger -t "$NAME" "正在停止 DDNS (Zig)"
-    killall -q panda-zig 2>/dev/null || true
-}
-
 reload_service() {
     stop
     start
