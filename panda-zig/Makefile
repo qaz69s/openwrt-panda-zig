@@ -7,23 +7,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=panda-zig
-PKG_VERSION:=0.2.0
+PKG_VERSION:=0.1.0
 PKG_RELEASE:=1
 
-# Map OpenWrt ARCH to GitHub release asset name
-PANDA_ASSET:=panda-zig-$(ARCH)
+# Map OpenWrt ARCH to panda-rust release asset name
+PANDA_ASSET:=panda-rust
 ifneq ($(filter aarch64%,$(ARCH)),)
-  PANDA_ASSET:=panda-zig-aarch64
+  PANDA_ASSET:=panda-rust-aarch64
 else ifneq ($(filter arm%,$(ARCH)),)
-  PANDA_ASSET:=panda-zig-armv7
+  PANDA_ASSET:=panda-rust-armv7
 else ifneq ($(filter i386 i586 i686%,$(ARCH)),)
-  PANDA_ASSET:=panda-zig-i686
-else ifneq ($(filter x86_64%,$(ARCH)),)
-  PANDA_ASSET:=panda-zig-x86_64
+  PANDA_ASSET:=panda-rust-i686
 endif
 
 PKG_SOURCE:=$(PANDA_ASSET)
-PKG_SOURCE_URL:=https://github.com/qaz69s/panda-zig/releases/download/v$(PKG_VERSION)/
+PKG_SOURCE_URL:=https://github.com/qaz69s/panda-rust/releases/download/v$(PKG_VERSION)/
 PKG_HASH:=skip
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
@@ -39,9 +37,9 @@ define Package/panda-zig
 endef
 
 define Package/panda-zig/description
-  Lightweight dynamic DNS update daemon written in Zig.
+  Lightweight dynamic DNS update daemon.
   Supports Cloudflare, DNSPod, Aliyun, No-IP, DuckDNS, Baidu,
-  and custom update URLs. Static binary, ~800KB on disk, ~1-2MB RSS.
+  and custom update URLs. ~4.5MB on disk.
 endef
 
 # ---------- No build needed (precompiled binary) ----------

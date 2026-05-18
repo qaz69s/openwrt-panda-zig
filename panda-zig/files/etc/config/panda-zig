@@ -1,7 +1,7 @@
-config panda-zig 'global'
+config panda-rust 'global'
 	option ddns_enabled '0'
 	option ddns_interval '300'
 
-config panda-zig 'ip_detect'
+config panda-rust 'ip_detect'
 	list ipv4_urls 'https://api.ipify.org'
 	list ipv6_urls 'https://api6.ipify.org'

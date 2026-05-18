@@ -1,20 +1,20 @@
 {
-  "luci-app-panda-zig": {
-    "description": "Grant LuCI access to Panda Zig DDNS",
+  "luci-app-panda-rust": {
+    "description": "Grant LuCI access to Panda Rust DDNS",
     "read": {
       "ubus": {
         "uci":     [ "get", "state" ],
         "file":    [ "read" ],
         "service": [ "list" ],
-        "luci.panda-zig": [ "clearLog" ]
+        "luci.panda-rust": [ "clearLog" ]
       },
       "uci": {
-        "panda-zig": [ "*" ]
+        "panda-rust": [ "*" ]
       },
       "file": {
-        "/var/log/panda-zig.log": [ "read" ],
-        "/etc/config/panda-zig": [ "read" ],
-        "/usr/libexec/rpcd/luci.panda-zig": [ "exec" ]
+        "/var/log/panda-rust.log": [ "read" ],
+        "/etc/config/panda-rust": [ "read" ],
+        "/usr/libexec/rpcd/luci.panda-rust": [ "exec" ]
       }
     },
     "write": {
@@ -22,14 +22,14 @@
         "uci":     [ "set", "apply", "commit", "revert", "add", "delete",
                      "rename", "order", "changes" ],
         "file":    [ "write" ],
-        "luci.panda-zig": [ "clearLog" ]
+        "luci.panda-rust": [ "clearLog" ]
       },
       "uci": {
-        "panda-zig": [ "*" ]
+        "panda-rust": [ "*" ]
       },
       "file": {
-        "/var/log/panda-zig.log": [ "write" ],
-        "/usr/libexec/rpcd/luci.panda-zig": [ "exec" ]
+        "/var/log/panda-rust.log": [ "write" ],
+        "/usr/libexec/rpcd/luci.panda-rust": [ "exec" ]
       }
     }
   }

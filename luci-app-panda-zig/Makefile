@@ -1,12 +1,20 @@
-# LuCI web interface for Panda Zig DDNS
-# 遵循 OpenWrt 25.12 包规范
-
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE     := Panda Zig DDNS
-LUCI_DEPENDS   := +luci-base +panda-zig
-LUCI_PKGARCH   := all
+PKG_VERSION:=0.1.0
+
+LUCI_TITLE:=LuCI support for Panda Zig DDNS
+LUCI_DEPENDS:=+luci-base +panda-zig
+
+PKG_LICENSE:=MIT
+PKG_MAINTAINER:=Pi <qaz69s@github>
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
-# call BuildPackage - OpenWrt buildroot signature
+define Package/luci-app-panda-zig/install
+	$(call Package/luci-app-panda-zig/install,$(1))
+	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
+	$(INSTALL_BIN) $(CURDIR)/root/usr/libexec/rpcd/luci.panda-zig \
+		$(1)/usr/libexec/rpcd/luci.panda-zig
+endef
+
+$(eval $(call BuildPackage,luci-app-panda-zig))
