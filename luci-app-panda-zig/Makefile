@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_VERSION:=0.2.0
+PKG_VERSION:=0.2.1
 
 LUCI_TITLE:=LuCI support for Panda Zig DDNS
 LUCI_DEPENDS:=+luci-base +panda-zig
