@@ -55,7 +55,7 @@ return view.extend({
 		};
 
 		/* ── 全局设置 ── */
-		s = m.section(form.NamedSection, 'global', 'panda-zig', '全局设置');
+		s = m.section(form.NamedSection, 'global', 'panda-rust', '全局设置');
 		s.anonymous = true;
 		s.addremove = false;
 
@@ -70,7 +70,7 @@ return view.extend({
 		o.rmempty  = false;
 
 		/* ── IP 检测地址 ── */
-		s = m.section(form.NamedSection, 'ip_detect', 'panda-zig', 'IP 检测');
+		s = m.section(form.NamedSection, 'ip_detect', 'panda-rust', 'IP 检测');
 		s.anonymous = true;
 		s.addremove = false;
 
@@ -85,7 +85,7 @@ return view.extend({
 		o.rmempty = true;
 
 		/* ── DNS 条目 ── */
-		s = m.section(form.TypedSection, 'ddns_entry_zig', 'DNS 条目',
+		s = m.section(form.TypedSection, 'ddns_entry_rust', 'DNS 条目',
 			'每条记录将域名映射到对应的服务商。守护进程在每个间隔内更新所有已启用的条目。');
 		s.anonymous = false;
 		s.addremove = true;
