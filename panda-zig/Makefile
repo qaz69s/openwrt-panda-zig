@@ -7,20 +7,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=panda-zig
-PKG_VERSION:=0.1.0
+PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
 
 # Map OpenWrt ARCH to GitHub release asset name
-# x86_64 -> panda-zig (legacy name), others use arch suffix
-PANDA_ASSET:=$(ARCH)
+PANDA_ASSET:=panda-zig-$(ARCH)
 ifneq ($(filter aarch64%,$(ARCH)),)
   PANDA_ASSET:=panda-zig-aarch64
 else ifneq ($(filter arm%,$(ARCH)),)
   PANDA_ASSET:=panda-zig-armv7
 else ifneq ($(filter i386 i586 i686%,$(ARCH)),)
   PANDA_ASSET:=panda-zig-i686
-else
-  PANDA_ASSET:=panda-zig
+else ifneq ($(filter x86_64%,$(ARCH)),)
+  PANDA_ASSET:=panda-zig-x86_64
 endif
 
 PKG_SOURCE:=$(PANDA_ASSET)
