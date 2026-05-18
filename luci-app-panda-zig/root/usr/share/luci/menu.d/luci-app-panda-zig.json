@@ -1,7 +1,7 @@
 {
   "admin/services/panda-zig": {
     "title": "Panda Zig",
-    "order": 66,
+    "order": 65,
     "action": {
       "type": "firstchild"
     }
