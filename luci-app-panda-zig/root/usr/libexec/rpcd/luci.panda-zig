@@ -2,10 +2,14 @@
 
 readonly NAME="panda-zig"
 readonly LOG="/var/log/panda-zig.log"
+readonly STDIN_DATA="/tmp/panda-rpcd-stdin.$$"
 
 . /usr/share/libubox/jshn.sh
 
 print_json_bool() { json_init; json_add_boolean "$1" "$2"; json_dump; json_cleanup; }
+
+# Save stdin for later processing by the method handler
+cat > "$STDIN_DATA"
 
 clear_log() {
 	if : > "$LOG" 2>/dev/null; then
@@ -15,14 +19,105 @@ clear_log() {
 	fi
 }
 
+# Cloudflare: list all A/AAAA records across all zones
+cf_list_records() {
+	local token=""
+
+	# Parse token from stdin (rpcd passes call params via stdin)
+	if [ -s "$STDIN_DATA" ]; then
+		json_init
+		json_load "$(cat "$STDIN_DATA")" 2>/dev/null
+		json_get_var token "token"
+	fi
+
+	# Fallback: read from config
+	if [ -z "$token" ]; then
+		config_load "$NAME"
+		config_get token global cf_token ""
+	fi
+
+	[ -z "$token" ] && { json_init; json_add_string "error" "缺少 API Token"; json_dump; json_cleanup; rm -f "$STDIN_DATA"; exit 1; }
+
+	local tmp_zones="/tmp/panda-cf-zones.json"
+	local tmp_records="/tmp/panda-cf-records.json"
+
+	# Fetch all zones
+	curl -s -H "Authorization: Bearer $token" -H "Content-Type: application/json" \
+		"https://api.cloudflare.com/client/v4/zones?per_page=100" > "$tmp_zones" 2>/dev/null
+
+	# Parse zones
+	local zones_success
+	zones_success=$(jsonfilter -i "$tmp_zones" -e '@.success' 2>/dev/null)
+	[ "$zones_success" != "true" ] && {
+		local err_msg
+		err_msg=$(jsonfilter -i "$tmp_zones" -e '@.errors[0].message' 2>/dev/null)
+		[ -z "$err_msg" ] && err_msg="查询 Zone 失败，请检查 Token 权限"
+		json_init; json_add_string "error" "$err_msg"; json_dump; json_cleanup
+		rm -f "$tmp_zones" "$tmp_records" "$STDIN_DATA"; exit 1
+	}
+
+	json_init
+	json_add_array "records"
+
+	local i=0
+	while true; do
+		local zid zname
+		zid=$(jsonfilter -i "$tmp_zones" -e "@.result[$i].id" 2>/dev/null)
+		[ -z "$zid" ] && break
+		zname=$(jsonfilter -i "$tmp_zones" -e "@.result[$i].name" 2>/dev/null)
+
+		# Fetch DNS records for this zone
+		curl -s -H "Authorization: Bearer $token" -H "Content-Type: application/json" \
+			"https://api.cloudflare.com/client/v4/zones/$zid/dns_records?type=A,AAAA&per_page=500" > "$tmp_records" 2>/dev/null
+
+		local rec_success
+		rec_success=$(jsonfilter -i "$tmp_records" -e '@.success' 2>/dev/null)
+
+		if [ "$rec_success" = "true" ]; then
+			local j=0
+			while true; do
+				local rname rtype rcontent
+				rname=$(jsonfilter -i "$tmp_records" -e "@.result[$j].name" 2>/dev/null)
+				[ -z "$rname" ] && break
+				rtype=$(jsonfilter -i "$tmp_records" -e "@.result[$j].type" 2>/dev/null)
+				rcontent=$(jsonfilter -i "$tmp_records" -e "@.result[$j].content" 2>/dev/null)
+
+				json_add_object ""
+				json_add_string "domain" "$rname"
+				json_add_string "type" "$rtype"
+				json_add_string "zone" "$zname"
+				json_add_string "content" "$rcontent"
+				json_close_object
+
+				j=$((j+1))
+			done
+		fi
+
+		i=$((i+1))
+	done
+
+	json_close_array
+	json_dump
+
+	rm -f "$tmp_zones" "$tmp_records" "$STDIN_DATA"
+}
+
 case "$1" in
 	list)
 		json_init
 		json_add_object "clearLog"; json_close_object
+		json_add_object "cfListRecords"; json_close_object
 		json_dump; json_cleanup
+		rm -f "$STDIN_DATA"
 		;;
 	call)
 		case "$2" in
 			clearLog) clear_log ;;
-		esac ;;
+			cfListRecords) cf_list_records ;;
+		esac
+		rm -f "$STDIN_DATA"
+		;;
+	*)
+		rm -f "$STDIN_DATA"
+		;;
 esac
