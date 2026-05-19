@@ -12,12 +12,12 @@ include $(TOPDIR)/feeds/luci/luci.mk
 
 define Package/luci-app-panda-zig/install
 	# htdocs
-	ifneq ($(wildcard $(PKG_BUILD_DIR)/htdocs),)
+	ifneq ($(wildcard ${CURDIR}/htdocs),)
 		$(INSTALL_DIR) $(1)$(HTDOCS)
 		cp -pR $(PKG_BUILD_DIR)/htdocs/* $(1)$(HTDOCS)/
 	endif
 	# root
-	ifneq ($(wildcard $(PKG_BUILD_DIR)/root),)
+	ifneq ($(wildcard ${CURDIR}/root),)
 		$(INSTALL_DIR) $(1)/
 		cp -pR $(PKG_BUILD_DIR)/root/* $(1)/
 	endif
