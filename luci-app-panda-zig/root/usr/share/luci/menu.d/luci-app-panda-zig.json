@@ -1,25 +1,25 @@
 {
-  "admin/services/panda-rust": {
-    "title": "Panda Rust",
+  "admin/services/panda-zig": {
+    "title": "Panda Zig",
     "order": 66,
     "action": {
       "type": "firstchild"
     }
   },
-  "admin/services/panda-rust/ddns": {
+  "admin/services/panda-zig/ddns": {
     "title": "设置",
     "order": 10,
     "action": {
       "type": "view",
-      "path": "panda-rust/ddns"
+      "path": "panda-zig/ddns"
     }
   },
-  "admin/services/panda-rust/log": {
+  "admin/services/panda-zig/log": {
     "title": "日志",
     "order": 20,
     "action": {
       "type": "view",
-      "path": "panda-rust/log"
+      "path": "panda-zig/log"
     }
   }
 }
