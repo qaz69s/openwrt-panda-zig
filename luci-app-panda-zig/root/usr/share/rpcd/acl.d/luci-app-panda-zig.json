@@ -6,7 +6,7 @@
         "uci":     [ "get", "state" ],
         "file":    [ "read" ],
         "service": [ "list" ],
-        "luci.panda-zig": [ "clearLog", "cfListRecords" ]
+        "luci.panda-zig": [ "clearLog" ]
       },
       "uci": {
         "panda-zig": [ "*" ]
@@ -22,7 +22,7 @@
         "uci":     [ "set", "apply", "commit", "revert", "add", "delete",
                      "rename", "order", "changes" ],
         "file":    [ "write" ],
-        "luci.panda-zig": [ "clearLog", "cfListRecords" ]
+        "luci.panda-zig": [ "clearLog" ]
       },
       "uci": {
         "panda-zig": [ "*" ]
