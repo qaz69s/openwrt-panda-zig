@@ -11,20 +11,15 @@ PKG_MAINTAINER:=Pi <qaz69s@github>
 include $(TOPDIR)/feeds/luci/luci.mk
 
 define Package/luci-app-panda-zig/install
-	# htdocs
-	ifneq ($(wildcard ${CURDIR}/htdocs),)
-		$(INSTALL_DIR) $(1)$(HTDOCS)
-		cp -pR $(PKG_BUILD_DIR)/htdocs/* $(1)$(HTDOCS)/
-	endif
-	# root
-	ifneq ($(wildcard ${CURDIR}/root),)
-		$(INSTALL_DIR) $(1)/
-		cp -pR $(PKG_BUILD_DIR)/root/* $(1)/
-	endif
-	# custom rpcd file
+	$(INSTALL_DIR) $(1)/www/luci-static/resources/view/panda-zig
+	$(INSTALL_DIR) $(1)/www/luci-static/resources/view/panda-zig
+	$(INSTALL_DIR) $(1)/usr/share/luci/menu.d
+	$(INSTALL_DIR) $(1)/usr/share/rpcd/acl.d
 	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
-	$(INSTALL_BIN) $(CURDIR)/root/usr/libexec/rpcd/luci.panda-zig \
-		$(1)/usr/libexec/rpcd/luci.panda-zig
+	cp -pR $(PKG_BUILD_DIR)/htdocs/luci-static/resources/view/panda-zig/* $(1)/www/luci-static/resources/view/panda-zig/
+	cp -pR $(PKG_BUILD_DIR)/root/usr/share/luci/menu.d/* $(1)/usr/share/luci/menu.d/
+	cp -pR $(PKG_BUILD_DIR)/root/usr/share/rpcd/acl.d/* $(1)/usr/share/rpcd/acl.d/
+	$(INSTALL_BIN) $(CURDIR)/root/usr/libexec/rpcd/luci.panda-zig $(1)/usr/libexec/rpcd/luci.panda-zig
 endef
 
 ifndef Package/luci-app-panda-zig/postinst
