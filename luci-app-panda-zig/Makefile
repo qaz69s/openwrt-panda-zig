@@ -33,6 +33,4 @@ define Package/luci-app-panda-zig/postinst
 endef
 endif
 
-$(eval $(call BuildPackage,luci-app-panda-zig))
-
 # call BuildPackage - OpenWrt buildroot signature
