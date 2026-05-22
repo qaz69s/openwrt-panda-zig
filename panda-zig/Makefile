@@ -18,6 +18,8 @@ else ifneq ($(filter arm%,$(ARCH)),)
   PANDA_ASSET:=panda-zig-armv7
 else ifneq ($(filter i386 i586 i686%,$(ARCH)),)
   PANDA_ASSET:=panda-zig-i686
+else ifneq ($(filter x86_64%,$(ARCH)),)
+  PANDA_ASSET:=panda-zig-x86_64
 endif
 
 PKG_SOURCE:=$(PANDA_ASSET)
